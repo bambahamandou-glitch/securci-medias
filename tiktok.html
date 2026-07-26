@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connexion TikTok — EBOOK PRO</title>
+<style>
+  body { margin:0; font-family: "Segoe UI", system-ui, sans-serif; background:#0f0f12; color:#fff;
+         min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; box-sizing:border-box; }
+  .card { max-width:560px; width:100%; background:#1a1a20; border:1px solid #2c2c35; border-radius:16px; padding:32px; text-align:center; }
+  h1 { font-size:1.4rem; margin:0 0 8px; }
+  p  { color:#b5b5c0; line-height:1.5; }
+  .ok   { color:#4ade80; font-size:2.4rem; }
+  .err  { color:#f87171; font-size:2.4rem; }
+  #code { font-family:Consolas, monospace; font-size:0.95rem; background:#0f0f12; border:1px dashed #4b4b58;
+          border-radius:10px; padding:14px; margin:18px 0; word-break:break-all; user-select:all; }
+  button { background:#fe2c55; color:#fff; border:0; border-radius:10px; padding:12px 26px; font-size:1rem; font-weight:600; cursor:pointer; }
+  button:active { transform:scale(.97); }
+  .hint { font-size:.85rem; color:#8a8a95; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="card" id="app"></div>
+<script>
+  var q = new URLSearchParams(location.search);
+  var code = q.get('code');
+  var error = q.get('error');
+  var app = document.getElementById('app');
+  if (code) {
+    app.innerHTML =
+      '<div class="ok">✅</div>' +
+      '<h1>Connexion TikTok réussie&nbsp;!</h1>' +
+      '<p>Voici ton <b>code d’autorisation</b>. Copie-le et colle-le dans la fenêtre noire ouverte sur ton PC.</p>' +
+      '<div id="code"></div>' +
+      '<button onclick="copier()">📋 Copier le code</button>' +
+      '<p class="hint">Ce code n’est valable que quelques minutes — colle-le tout de suite.</p>';
+    document.getElementById('code').textContent = code;
+  } else if (error) {
+    app.innerHTML =
+      '<div class="err">❌</div>' +
+      '<h1>Connexion refusée</h1>' +
+      '<p>TikTok a renvoyé l’erreur : <b></b></p>' +
+      '<p class="hint">Ferme cette page et relance la connexion depuis le PC.</p>';
+    app.querySelector('b').textContent = error + (q.get('error_description') ? ' — ' + q.get('error_description') : '');
+  } else {
+    app.innerHTML =
+      '<h1>Page de connexion TikTok</h1>' +
+      '<p>Cette page sert uniquement à récupérer le code d’autorisation TikTok de la marque <b>EBOOK PRO</b>. Rien à faire ici.</p>';
+  }
+  function copier() {
+    var t = document.getElementById('code').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function(){
+      document.querySelector('button').textContent = '✅ Copié !';
+    }).catch(function(){
+      var r = document.createRange(); r.selectNode(document.getElementById('code'));
+      getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand('copy');
+      document.querySelector('button').textContent = '✅ Copié !';
+    });
+  }
+</script>
+</body>
+</html>
